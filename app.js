@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express');
+const path = require('path');
 const app = express();
 const port = process.env.PORT;
 const cors = require('cors');
@@ -9,6 +10,8 @@ const { readdirSync } = require('fs')
 const middlewares = [express.json(), cors()];
 
 middlewares.forEach(middleware => app.use(middleware));
+app.use('/picture/post', express.static(path.join(__dirname, 'uploads/posts')))
+app.use('/avatar', express.static(path.join(__dirname, 'uploads/avatar')))
 
 readdirSync('./routes').map((r) => app.use('/api', require('./routes/' + r)))
 

@@ -37,5 +37,7 @@ router.put('/auth/update',authMiddleware.auth,authController.editprofile);
 router.put('/auth/changeavatar',authMiddleware.auth,upload.single('avatar'),authController.changeavatar);
 router.delete('/auth/user-delete',authMiddleware.auth,authController.deleteProfile);
 router.put('/auth/change-password',authMiddleware.auth,authController.changePassword);
+router.get('/auth/user/profile',authMiddleware.auth,authController.profile);
+router.post('/auth/logout',authMiddleware.auth,authController.logout); 
 
 module.exports = router

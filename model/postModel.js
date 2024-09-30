@@ -10,11 +10,6 @@ const postSchema = new mongoose.Schema({
     body: {
         type: String,
     },
-    tag: {
-        type: String,
-        require: true,
-        maxlength: 255
-    },
     picture: {
         type: String,
         maxlength: 255
@@ -27,6 +22,15 @@ const postSchema = new mongoose.Schema({
 },{
     timestamps: true 
 });
+
+postSchema.virtual('comments', {
+    ref: 'comments', // The model to use
+    localField: '_id', // Find comments where `post_id` matches `_id`
+    foreignField: 'post_id' // The post_id field in the Comment model
+});
+
+postSchema.set('toObject', { virtuals: true });
+postSchema.set('toJSON', { virtuals: true });
 
 const Post = mongoose.model('posts', postSchema);
 

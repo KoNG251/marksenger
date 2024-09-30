@@ -2,11 +2,12 @@ require('../config/db');
 require('dotenv').config();
 const Post = require('../model/postModel');
 const User = require('../model/userModel');
+const Comment = require('../model/commentModel'); 
 
 exports.create = async (req,res) => {
     const { body, tag } = req.body;
 
-    if(!body || !tag){
+    if(!body){
         return res.status(400).json({
             message: "body or tag is required"
         });
@@ -18,7 +19,6 @@ exports.create = async (req,res) => {
             user: req.user,
             body: body,
             picture: req.post_pic,
-            tag: tag,
             status: 0
         });
 
@@ -132,6 +132,39 @@ exports.delete = async (req,res) => {
         return res.status(200).json({
             message : "delete post success"
         });
+
+    }catch(error){
+        return res.status(500).json({
+            message: "server error : "+ error
+        })
+    }
+
+}
+
+exports.allPost = async(req,res) => {
+
+    try{
+
+        const posts = await Post.find({
+            status: 1
+        })
+        .sort({ createdAt: -1 })
+        .populate({
+            path:'user',
+            select: 'firstname lastname picture'
+        }) 
+        .populate({
+            path: 'comments',
+            populate: {
+                path: 'user_id', 
+                select: 'firstname lastname picture'
+            }
+        });
+
+        return res.status(200).json({
+            message: posts
+        })
+
 
     }catch(error){
         return res.status(500).json({

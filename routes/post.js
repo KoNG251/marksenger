@@ -32,5 +32,6 @@ const optionalUpload = (req, res, next) => {
 router.post('/post/create',authMiddleware.auth,optionalUpload,postController.create);
 router.put('/post/edit',authMiddleware.auth,optionalUpload,postController.edit);
 router.delete('/post/delete',authMiddleware.auth,postController.delete);
+router.get('/post',authMiddleware.auth,postController.allPost);
 
 module.exports = router

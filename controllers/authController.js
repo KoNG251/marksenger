@@ -33,7 +33,7 @@ exports.login = async (req,res) => {
             })
         }
 
-        const token = await jwt.sign({ id: validateEmail._id}, process.env.SECRET , { expiresIn: '5h' });
+        const token = await jwt.sign({ id: validateEmail._id}, process.env.SECRET , { expiresIn: '12h' });
         return res.status(200).json({
             message: "login success",
             token
@@ -66,10 +66,16 @@ exports.register = async (req,res) => {
     }
 
     if (password !== confirm_password) {
-        return res.status(400).json({
+        return res.status(401).json({
             message: "Passwords do not match"
         });
     }    
+
+    if(password.length < 8){
+        return res.status(401).json({
+             message: "Password must be at least 8 characters long."
+        })
+    }
     
     try{
         const saltRounds = 10;
@@ -241,6 +247,44 @@ exports.changePassword = async (req,res) => {
         });
         
 
+    }catch(error){
+        return res.status(500).json({
+            message: "Error: " + error.message
+        });
+    }
+
+}
+
+exports.profile = async (req,res) => {
+
+    try{
+
+        const user = await User.findById(req.user).exec();
+
+        if(!user){
+            return res.status(404).json({
+                message : "Not found user."
+            });
+        }
+
+        return res.status(200).json({
+            message: user
+        });
+
+    }catch(error){
+        
+        return res.status(500).json({
+            message: "Error: " + error.message
+        });
+
+    }
+
+}
+
+exports.logout = async (req,res) => {
+
+    try{
+        return res.status(200).json({ message: 'Logout successful' });
     }catch(error){
         return res.status(500).json({
             message: "Error: " + error.message
