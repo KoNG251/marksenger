@@ -33,6 +33,7 @@ const upload = multer({
 
 router.post('/group/create',authMiddleware.auth,upload.single('group_pic'),groupController.create);
 router.delete('/group/delete',authMiddleware.auth,groupController.delete);
+router.get('/group',authMiddleware.auth,groupController.findAllGroup);
 
 
 module.exports = router

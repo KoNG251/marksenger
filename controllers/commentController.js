@@ -1,6 +1,8 @@
 require('../config/db');
 const comment = require('../model/commentModel'); 
 const post = require('../model/postModel'); 
+const Pusher = require("pusher");
+require('dotenv').config()
 
 exports.comment = async (req,res) => {
 
@@ -11,6 +13,14 @@ exports.comment = async (req,res) => {
             message : "Post id is required"
         });
     }
+
+    const pusher = new Pusher({
+        appId: process.env.APP_PUSHER_ID,
+        key: process.env.APP_PUSHER_KEY,
+        secret: process.env.APP_PUSHER_SECRET,
+        cluster: "ap1",
+        useTLS: true
+      });
 
     try{
 
@@ -40,6 +50,16 @@ exports.comment = async (req,res) => {
                 message : "create comment failed."
             });
         }
+
+        const comments = await comment.findById(createComment._id)
+            .populate({
+                path: 'user_id', 
+                select: 'firstname lastname picture'
+            })
+
+        pusher.trigger("comment", "lastedcomment", {
+            message: comments
+        });
 
         return res.status(200).json({
             message : "comment success."
@@ -100,6 +120,6 @@ exports.edit = async (req,res) => {
         })
 
     }catch(error){
-
+        
     }
 }

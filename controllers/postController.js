@@ -148,7 +148,7 @@ exports.allPost = async(req,res) => {
         const posts = await Post.find({
             status: 1
         })
-        .sort({ createdAt: -1 })
+        .sort({ updatedAt: -1 })
         .populate({
             path:'user',
             select: 'firstname lastname picture'

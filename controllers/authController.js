@@ -17,7 +17,10 @@ exports.login = async (req,res) => {
 
     try{
 
-        const validateEmail = await User.findOne({"email" : email})
+        const validateEmail = await User.findOne({
+            "email" : email,
+            "role" : "member"
+        })
     
         if(!validateEmail){
             return res.status(401).json({
@@ -57,7 +60,10 @@ exports.register = async (req,res) => {
         })
     }
 
-    const existingUser = await User.findOne({"email" : email });
+    const existingUser = await User.findOne({
+        "email" : email,
+        "role" : "member"
+    });
 
     if (existingUser) {
         return res.status(401).json({
@@ -210,7 +216,25 @@ exports.deleteProfile = async (req,res) => {
 
 exports.changePassword = async (req,res) => {
 
-    const {old_password , new_password} = req.body
+    const {old_password , new_password, confirm_password} = req.body
+
+    if(!old_password || !new_password || !confirm_password){
+        return res.status(400).json({
+            message : "Please complete the input."
+        });
+    }
+
+    if(new_password != confirm_password){
+        return res.status(401).json({
+            message : "password not match"
+        });
+    }
+
+    if(new_password.length < 8){
+        return res.status(400).json({
+            message : "Password must be at least 8 characters long."
+        });
+    }
 
     try{
 
