@@ -4,6 +4,12 @@ const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
 const groupController = require('../controllers/groupController');
 
+const fs = require('fs');
+
+if (!fs.existsSync('uploads/groups')) {
+    fs.mkdirSync('uploads/groups', { recursive: true });
+}
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/groups')

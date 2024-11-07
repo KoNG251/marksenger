@@ -4,6 +4,13 @@ const authMiddleware = require('../middleware/authMiddleware')
 const postController = require('../controllers/postController')
 const multer = require('multer');
 
+const fs = require('fs');
+
+if (!fs.existsSync('uploads/posts')) {
+    fs.mkdirSync('uploads/posts', { recursive: true });
+}
+
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/posts')

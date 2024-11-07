@@ -4,6 +4,12 @@ const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
 const multer = require('multer');
 
+const fs = require('fs');
+
+if (!fs.existsSync('uploads/avatar')) {
+    fs.mkdirSync('uploads/avatar', { recursive: true });
+}
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/avatar')
