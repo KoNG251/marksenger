@@ -19,7 +19,7 @@ exports.create = async (req,res) => {
             user: req.user,
             body: body,
             picture: req.post_pic,
-            status: 0
+            status: 1
         });
 
         if(insertContent){
