@@ -33,3 +33,20 @@
 - picture type string
 - role type string
 
+## Api route ##
+### LOGIN ###
+  method POST
+  - /api/auth/login
+  #### Request ####
+    - email
+    - password
+
+### register ###
+  method POST
+  - /api/auth/register
+  #### Request ####
+    - firstname
+    - lastname
+    - email
+    - password
+    - confirm_password
